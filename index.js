@@ -39,13 +39,11 @@ module.exports = async function getFunctionLocation(needle) {
 
       let source = scriptForNode.params.url;
 
+      // Node 8 does not prefix the source with `file://` (but Node 10 and 11 do)
+      // this normalizes to ensure consistent result
       if (!source.startsWith('file://')) {
         source = 'file://' + source;
       }
-
-      await session.post('Runtime.releaseObjectGroup', {
-        objectGroup: globalPath,
-      });
 
       return {
         source,
@@ -53,6 +51,10 @@ module.exports = async function getFunctionLocation(needle) {
         column: location.value.value.columnNumber + 1,
       };
     } finally {
+      await session.post('Runtime.releaseObjectGroup', {
+        objectGroup: globalPath,
+      });
+
       session.disconnect();
       delete global[globalPath];
     }
