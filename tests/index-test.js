@@ -9,6 +9,8 @@ function buildFunction() {
   return function() {};
 }
 
+QUnit.config.testTimeout = 5000;
+
 QUnit.module('get-function-location', function() {
   QUnit.test('works for anonymous functions', async function(assert) {
     let location = await getFunctionLocation(buildFunction());
