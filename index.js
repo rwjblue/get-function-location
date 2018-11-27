@@ -8,6 +8,8 @@ let _sessionCompleted = Promise.resolve();
 
 module.exports = async function getFunctionLocation(needle) {
   _sessionCompleted = _sessionCompleted.then(async function() {
+
+    // create a "unique" path so that we can easily reference this object on the global
     let globalPath = `__getFunctionLocation_${++uuid}`;
     global[globalPath] = needle;
 
@@ -24,6 +26,7 @@ module.exports = async function getFunctionLocation(needle) {
 
       await session.post('Debugger.enable');
 
+      // in order to get the function location we must have the internal objectId for the function
       let output = await session.post('Runtime.evaluate', {
         expression: `global.${globalPath}`,
         objectGroup: globalPath,
@@ -51,6 +54,8 @@ module.exports = async function getFunctionLocation(needle) {
         column: location.value.value.columnNumber + 1,
       };
     } finally {
+      // ensure that the RemoteObject that we created in `Runtime.evaluate` to
+      // use for grabbing the function location is properly released
       await session.post('Runtime.releaseObjectGroup', {
         objectGroup: globalPath,
       });
