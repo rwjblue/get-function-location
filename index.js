@@ -7,17 +7,17 @@ let uuid = 0;
 let _sessionCompleted = Promise.resolve();
 
 module.exports = async function getFunctionLocation(needle) {
-  let scripts = {};
-  let globalPath = `__getFunctionLocation_${++uuid}`;
-  global[globalPath] = needle;
-
   _sessionCompleted = _sessionCompleted.then(async function() {
+    let globalPath = `__getFunctionLocation_${++uuid}`;
+    global[globalPath] = needle;
+
     let session = new inspector.Session();
     session.post = util.promisify(session.post);
 
     try {
       session.connect();
 
+      let scripts = {};
       session.on('Debugger.scriptParsed', result => {
         scripts[result.params.scriptId] = result;
       });
