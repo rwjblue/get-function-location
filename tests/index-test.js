@@ -9,9 +9,14 @@ function buildFunction() {
   return function() {};
 }
 
+let GLOBAL_KEYS = Object.keys(global);
 QUnit.config.testTimeout = 5000;
 
-QUnit.module('get-function-location', function() {
+QUnit.module('get-function-location', function(hooks) {
+  hooks.afterEach(function(assert) {
+    assert.deepEqual(Object.keys(global), GLOBAL_KEYS);
+  });
+
   QUnit.test('works for anonymous functions', async function(assert) {
     let location = await getFunctionLocation(buildFunction());
 
@@ -21,6 +26,7 @@ QUnit.module('get-function-location', function() {
       column: 18,
     });
   });
+
   QUnit.test('works for normal functions', async function(assert) {
     let location = await getFunctionLocation(bar);
 

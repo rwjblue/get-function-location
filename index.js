@@ -49,6 +49,7 @@ module.exports = async function getFunctionLocation(needle) {
       };
     } finally {
       session.disconnect();
+      delete global[globalPath];
     }
   });
 
