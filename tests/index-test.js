@@ -40,4 +40,24 @@ QUnit.module('get-function-location', function() {
       column: 11,
     });
   });
+
+  QUnit.test('handles concurrent requests without error', async function(assert) {
+    let first = getFunctionLocation(foo);
+    let second = getFunctionLocation(bar);
+
+    let firstResult = await first;
+    let secondResult = await second;
+
+    assert.deepEqual(firstResult, {
+      source: `file://${__filename}`,
+      line: 5,
+      column: 11,
+    });
+
+    assert.deepEqual(secondResult, {
+      source: `file://${__filename}`,
+      line: 6,
+      column: 13,
+    });
+  });
 });
