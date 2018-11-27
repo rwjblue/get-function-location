@@ -26,6 +26,7 @@ module.exports = async function getFunctionLocation(needle) {
 
       let output = await session.post('Runtime.evaluate', {
         expression: `global.${globalPath}`,
+        objectGroup: globalPath,
       });
 
       output = await session.post('Runtime.getProperties', {
@@ -41,6 +42,10 @@ module.exports = async function getFunctionLocation(needle) {
       if (!source.startsWith('file://')) {
         source = 'file://' + source;
       }
+
+      await session.post('Runtime.releaseObjectGroup', {
+        objectGroup: globalPath,
+      });
 
       return {
         source,
