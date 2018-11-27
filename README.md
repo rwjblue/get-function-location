@@ -15,7 +15,8 @@ const getFunctionLocation = require('get-function-location');
 
 function someFunction() {};
 
-getFunctionLocation(someFunction);
+let result = await getFunctionLocation(someFunction);
+
 // => { source: 'file:///Users/rjackson/src/rwjblue/get-function-location/this-file.js', line: 3, column: 22 }
 ```
 
