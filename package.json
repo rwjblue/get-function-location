@@ -1,6 +1,6 @@
 {
   "name": "get-function-location",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Retrieve the source location of a function in Node 8+.",
   "repository": "git@github.com:rwjblue/get-function-location.git",
   "license": "MIT",
